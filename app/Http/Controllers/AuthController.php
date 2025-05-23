@@ -22,13 +22,7 @@ class AuthController extends Controller
         
         if ($request->password !== $request->password_confirmation) {
             return response()->json(['status' => 'error', 'message' => 'Password does not match!'], 400);
-        }
-
-        $user = User::where('username', $request->username)->first();
-
-        if ($user) {
-            return response()->json(['status' => 'error', 'message' => 'Username already taken!'], 400);
-        }
+        }        
 
         $data['password'] = Hash::make($request->password);       
             
@@ -130,20 +124,19 @@ class AuthController extends Controller
         ]);       
 
         if ($request->user_img) {
-            $userImg = auth()->user()->fullname .  '-'. $request->user_img->extension();
-            $request->user_img->storeAs('public/files', $userImg);
-            $userImgLink = URL('storage/files/' . $userImg);
+            $file = $request->file('user_img');
+            $userImg = $user->fullname . '-' . $file->getClientOriginalExtension();
+            $file->storeAs('public/files', $userImg);
+            $userImgLink = url('storage/files/' . $userImg);
 
-            $user->update(
-                ['user_img' => $userImgLink]
-            );
+            $user->update(['user_img' => $userImgLink]);
         }
 
         
         $data =  $user->update([
-            'fullname' => $request->firstname,
-            'username' => $request->lastname,
-            'contact_number' => $request->phone_number,
+            'fullname' => $request->fullname,
+            'username' => $request->username,
+            'contact_number' => $request->contact_number,
             'email' => $request->email            
         ]);
 

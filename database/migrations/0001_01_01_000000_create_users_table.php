@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('fullname');
             $table->string('username')->unique();
-            $table->string('contact_number')->unique();
+            $table->string('contact_number')->unique()->nullable();
             $table->string('email')->unique();
                     // Profile fields
-            $table->string('phone')->nullable();
             $table->string('user_img')->nullable();
 
             // Socials
