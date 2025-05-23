@@ -17,6 +17,20 @@ return new class extends Migration
             $table->string('username')->unique();
             $table->string('contact_number')->unique();
             $table->string('email')->unique();
+                    // Profile fields
+            $table->string('phone')->nullable();
+            $table->string('user_img')->nullable();
+
+            // Socials
+            $table->string('instagram')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('linkedin')->nullable();
+
+            // Links
+            $table->string('website')->nullable();
+            $table->string('portfolio')->nullable();
+            $table->string('github')->nullable();
+            
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
