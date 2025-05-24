@@ -3,6 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth; 
 
 class AuthController extends Controller
 {
@@ -39,7 +44,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $request->validate([
-            'username'     =>  'required|username',
+            'username'     =>  'required|string',
             'password'  =>  'required|string'
         ]);
 
@@ -123,14 +128,16 @@ class AuthController extends Controller
             'user_img' => 'nullable'         
         ]);       
 
-        if ($request->user_img) {
+        if ($request->hasFile('user_img')) {
             $file = $request->file('user_img');
-            $userImg = $user->fullname . '-' . $file->getClientOriginalExtension();
-            $file->storeAs('public/files', $userImg);
-            $userImgLink = url('storage/files/' . $userImg);
-
+            $userImg = $user->fullname . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $file->storeAs('public/files/images', $userImg);
+            $userImgLink = url('storage/files/images/' . $userImg);
+        
             $user->update(['user_img' => $userImgLink]);
         }
+        
+        
 
         
         $data =  $user->update([
