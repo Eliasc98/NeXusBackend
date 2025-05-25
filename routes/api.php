@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/contacts', [ContactController::class, 'index']);
     Route::post('/save-contacts', [ContactController::class, 'store']);
     Route::get('/contacts/search', [ContactController::class, 'search']);
+    Route::get('/contact-search/search', [ContactController::class, 'searchApi']);
 });
 

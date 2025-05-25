@@ -31,7 +31,7 @@ class ContactController extends Controller
                 ->orWhere('phone', 'like', "%$query%");
             })
             ->latest()
-            ->take($query ? 100 : 3) // if searching, return more, else default 3
+            ->take($query ? 100 : 3)
             ->get();
 
         if ($contacts->isEmpty()) {
@@ -50,7 +50,42 @@ class ContactController extends Controller
         ]);
     }
 
-    // ✅ Store new contact
+    public function searchApi(Request $request)
+{
+    $user = auth()->user();
+    $query = $request->input('q');
+
+    if (!$query) {
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Please enter a contact name, email, or phone number to search.'
+            
+        ], 400);
+    }
+
+    $contacts = $user->contacts()
+        ->where(function ($q1) use ($query) {
+            $q1->where('name', 'like', "%$query%")
+                ->orWhere('email', 'like', "%$query%")
+                ->orWhere('phone', 'like', "%$query%");
+        })
+        ->get();
+
+    if ($contacts->isEmpty()) {
+        return response()->json([
+            'status' => 'success',
+            'message' => 'No matching contact found.'
+        ]);
+    }
+
+    return response()->json([
+        'status' => 'success',
+        'message' => 'Contact Fetched Successfully',
+        'data' => $contacts
+    ]);
+}
+
+    // 
     public function store(Request $request)
     {
         $data = $request->validate([
