@@ -115,55 +115,42 @@ class AuthController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        //
-        $userid = auth()->user()->id;
-        $user = User::find($userid);
+{
+    $user = auth()->user();
 
-        $data = $request->validate([
-            'fullname' => 'required',  
-            'username' => 'required|unique:users',         
-            'contact_number' => 'required',
-            'email' => 'required|email|unique:users',
-            'user_img' => 'nullable'         
-        ]);       
+    $validated = $request->validate([
+        'fullname'        => 'required|string|max:255',
+        'username'        => 'required|string|max:255',
+        'contact_number'  => 'required|string|max:20',
+        'email'           => 'required|email|max:255',
+        'user_img'        => 'nullable',
+        'twitter'         => 'nullable|string|max:255',
+        'instagram'       => 'nullable|string|max:255',
+        'linkedin'        => 'nullable|string|max:255',
+        'github'          => 'nullable|string|max:255',
+        'website'         => 'nullable|string|max:255',
+        'portfolio'       => 'nullable|string|max:255',
+    ]);
 
-        if ($request->hasFile('user_img')) {
-            $file = $request->file('user_img');
-            $userImg = $user->fullname . '-' . time() . '.' . $file->getClientOriginalExtension();
-            $file->storeAs('public/files/images', $userImg);
-            $userImgLink = url('storage/files/images/' . $userImg);
-        
-            $user->update(['user_img' => $userImgLink]);
-        }
-        
-        
-
-        
-        $data =  $user->update([
-            'fullname' => $request->fullname,
-            'username' => $request->username,
-            'contact_number' => $request->contact_number,
-            'email' => $request->email            
-        ]);
-
-
-
-        if ($data) {
-            $response = [
-                'status' => 'success',
-                'message' => 'Profile updated successfully',
-                'data' => $data
-            ];
-            return response()->json($response);
-        } else {
-            $response = [
-                'status' => 'failed',
-                'message' => 'unable to update User Profile'
-            ];
-            return response()->json($response, 404);
-        }
+    
+    if ($request->hasFile('user_img')) {
+        $imageData = base64_decode($request->user_img);
+        $fileName = $user->fullname . '-' . time() . '.jpg';
+        Storage::put("public/files/images/{$fileName}", $imageData);
+        $validated['user_img'] = url("storage/files/images/{$fileName}");
     }
+
+   
+    $user->update($validated);
+
+    
+    return response()->json([
+        'status'  => 'success',
+        'message' => 'Profile updated successfully!',
+        'data'    => $user->fresh() 
+    ]);
+}
+
 
     public function show()
     {
