@@ -19,7 +19,20 @@ class User extends Authenticatable
      * @var list<string>
      */
 
-    protected $fillable = ['username', 'password', 'fullname', 'contact_number', 'email', 'user_img', 'instagram', 'twitter', 'linkedin', 'website', 'portfolio', 'github'];
+    protected $fillable = [
+        'username', 
+        'password', 
+        'fullname', 
+        'contact_number', 
+        'email', 
+        'user_img', 
+        'instagram', 
+        'twitter', 
+        'linkedin', 
+        'website', 
+        'portfolio', 
+        'github'
+    ];
    
 
     public function contacts()

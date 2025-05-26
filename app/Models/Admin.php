@@ -11,11 +11,15 @@ class Admin extends Model
     //
     protected $guard = 'admin';
     
-    protected $fillable = [
-        'fullname', 'email', 'password', 'username'
+    protected $fillable = [        
+        'fullname', 
+        'email', 
+        'password', 
+        'username'
     ];
 
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 
+        'remember_token',
     ];
 }

@@ -103,7 +103,7 @@ class ContactController extends Controller
         ], 201);
     }
 
-    // ✅ View single contact
+    // View single contact
     public function show($id)
     {
         $contact = Auth::user()->contacts()->find($id);
@@ -121,7 +121,7 @@ class ContactController extends Controller
         ]);
     }
 
-    // ✅ Update contact
+    // Update contact
     public function update(Request $request, $id)
     {
         $contact = Auth::user()->contacts()->find($id);
@@ -148,7 +148,7 @@ class ContactController extends Controller
         ]);
     }
 
-    // ✅ Delete contact
+    // Delete contact
     public function destroy($id)
     {
         $contact = Auth::user()->contacts()->find($id);
