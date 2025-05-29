@@ -7,6 +7,10 @@ use App\Http\Controllers\AuthController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/php-version', function () {
+    return phpversion();
+});
+
 
 Route::post('/register-user', [AuthController::class, 'register']);
 
