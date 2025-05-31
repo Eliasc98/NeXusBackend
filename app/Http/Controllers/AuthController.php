@@ -133,15 +133,17 @@ class AuthController extends Controller
     ]);
 
     
+    $user->update($validated);
+
     if ($request->hasFile('user_img')) {
-        $imageData = base64_decode($request->user_img);
-        $fileName = $user->fullname . '-' . time() . '.jpg';
-        Storage::put("public/files/images/{$fileName}", $imageData);
-        $validated['user_img'] = url("storage/files/images/{$fileName}");
+        $file = $request->file('user_img');
+        $filename = time().'_'.$file->getClientOriginalName();
+        $file->move(public_path('uploads/avatars'), $filename);
+        $user->user_img = url('/uploads/avatars/' . $filename);
+        $user->save();
     }
 
    
-    $user->update($validated);
 
     
     return response()->json([
